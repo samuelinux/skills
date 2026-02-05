@@ -1,2 +1,2 @@
 # skills
-Inicio de um projeto ambicioso para skills de programação para ajudar no dia a dia.
+Inicio de um projeto ambicioso para skills de programação ajudarem no dia a dia.
