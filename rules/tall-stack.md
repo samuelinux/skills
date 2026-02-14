@@ -24,8 +24,8 @@ O projeto segue uma hierarquia organizacional rígida: **Sistema ➝ Perfil (Rol
 ## 2.2 Regras de Portabilidade (Agnóstico ao Servidor)
 
 - **Proibido Hardcoding:** Nunca use drivers específicos (ex: `disk('local')`) ou caminhos absolutos fixos (ex: `/var/www/...`).
-- **Abstração de Arquivos:** Use sempre `Storage::` sem especificar o driver no código (deixe o Laravel usar o padrão do `.env`) ou use drivers configuráveis.
-- **Helpers de Caminho:** Utilize obrigatoriamente helpers como `base_path()`, `storage_path()`, `public_path()` ou `config()` para referenciar diretórios.
+- **Abstração de Arquivos:** Use sempre `Storage::` sem especificar o driver no código (deixe o Laravel usar o padrão do `.env`) ou use drivers configuráveis. **Nunca** chame `Storage::disk(config('filesystems.default'))` — é redundante; `Storage::put()` já usa o driver padrão.
+- **Helpers de Caminho:** Utilize obrigatoriamente helpers como `base_path()`, `storage_path()` ou `config()` para referenciar diretórios. O helper `public_path()` deve ser usado **exclusivamente para assets estáticos** (CSS, JS, logos do sistema) — **nunca para uploads ou arquivos de usuário**.
 - **Drivers de Serviço:** Serviços como Mail, Cache e Session devem usar o driver definido no `.env`, garantindo que o sistema funcione em ambientes limitados (Hostinger) apenas trocando a configuração.
 
 # 3. Comunicação e Feedback (SweetAlert2)
@@ -41,3 +41,15 @@ $this->dispatch('swal:modal', icon: 'success', title: 'Sucesso!', text: 'Operaç
 - **Design:** Minimalista e focado em usabilidade.
 - **Loading States:** Uso extensivo de `wire:loading` e `wire:target`.
 - **Flickering:** Uso obrigatório de `x-cloak`.
+
+# 4. Performance e Escalabilidade (Boas Práticas)
+
+## 4.1 Hidratação de Estado (Livewire)
+
+- **Propriedades Public Leves:** Nunca armazene Models inteiros ou coleções pesadas em propriedades `public`. Isso gera tráfego de rede excessivo (Payload).
+- **IDs e Carregamento Dinâmico:** Armazene apenas o ID no estado `public` e recupere o Model no método `render()` ou usando `Computed Properties` (`#[Computed]`).
+
+## 4.2 Processamento Assíncrono (Queues)
+
+- **Regra dos 2 Segundos:** Qualquer tarefa que leve mais de 2 segundos (e-mails, geração de PDF, integrações de API externa) **DEVE** ser movida para uma Job Queue.
+- **Drivers de Fila:** O código deve usar o driver padrão. Em produção, garanta que o Worker esteja rodando (via Cron na Hostinger ou Supervisor na VPS).
