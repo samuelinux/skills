@@ -15,14 +15,18 @@ description: Protocolo mestre para desenvolvimento TALL Stack (Laravel 11, Livew
 - **SweetAlert2:** Proibido uso de CDN ou pacotes de config PHP. Utilizar o arquivo localizado em `public/js/sweetalert2.all.min.js`.
 - **JS Externo:** Proibido o uso de JavaScript puro (Vanilla) em arquivos `.js` separados. Toda lógica de interatividade deve usar as diretivas do AlpineJS diretamente no HTML.
 
-# 2. Arquitetura Modular (Espelhamento de 3 Níveis)
+# 2. Arquitetura Modular e Portabilidade
+
+## 2.1 Estrutura de Pastas (3 Níveis)
 
 O projeto segue uma hierarquia organizacional rígida: **Sistema ➝ Perfil (Role) ➝ Funcionalidade (Menu)**.
 
-- **Regra de Nome:** O nome do arquivo final NÃO deve repetir os nomes das pastas anteriores.
-- **Backend (Componentes):** `App/Livewire/{Sistema}/{Perfil}/{Funcionalidade}.php`
-- **Frontend (Views):** `resources/views/livewire/{sistema}/{perfil}/{funcionalidade}.blade.php` (Pastas em caixa baixa).
-- **Rotas:** Utilizar grupos de prefixos e nomes que reflitam a estrutura de pastas acima.
+## 2.2 Regras de Portabilidade (Agnóstico ao Servidor)
+
+- **Proibido Hardcoding:** Nunca use drivers específicos (ex: `disk('local')`) ou caminhos absolutos fixos (ex: `/var/www/...`).
+- **Abstração de Arquivos:** Use sempre `Storage::` sem especificar o driver no código (deixe o Laravel usar o padrão do `.env`) ou use drivers configuráveis.
+- **Helpers de Caminho:** Utilize obrigatoriamente helpers como `base_path()`, `storage_path()`, `public_path()` ou `config()` para referenciar diretórios.
+- **Drivers de Serviço:** Serviços como Mail, Cache e Session devem usar o driver definido no `.env`, garantindo que o sistema funcione em ambientes limitados (Hostinger) apenas trocando a configuração.
 
 # 3. Comunicação e Feedback (SweetAlert2)
 

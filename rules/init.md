@@ -15,4 +15,5 @@ description: Regras globais e inicialização do agente
 
 # 3. Filosofia do Projeto
 
-- **Foco em Desempenho:** O projeto é focado em desempenho extremo. Todo código, arquitetura e sugestão deve ser otimizado para garantir o menor tempo de resposta e o uso mais eficiente de recursos. Priorize soluções que evitem overhead desnecessário (como o uso de pacotes pesados ou processamento síncrono bloqueante).
+- **Foco em Desempenho:** O projeto é focado em desempenho extremo. Todo código, arquitetura e sugestão deve ser otimizado para garantir o menor tempo de resposta e o uso mais eficiente de recursos.
+- **Portabilidade e Abstração:** O código deve ser totalmente agnóstico ao servidor (multi-servidor), funcionando perfeitamente tanto em **Hostinger (Shared)** quanto em **VPS**. É proibido o uso de caminhos absolutos fixos ou a definição rígida (hardcoding) de drivers. Utilize sempre as camadas de abstração do Laravel (Helpers e Configurações via `.env`).

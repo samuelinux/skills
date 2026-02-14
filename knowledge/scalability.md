@@ -21,7 +21,18 @@ O projeto tem como pilar central o **Desempenho Extremo**. O Livewire 3 é **Sta
 - **Defer Loading:** Usar `wire:model.blur` ao invés de `.live` quando a atualização em tempo real não for estritamente necessária.
 - **Componentes Pesados:** Considerar `Livewire::lazy()` para componentes que processam muitos dados.
 
-## 3. Transição para Stateless
+## 3. Compatibilidade: Hostinger (Shared) vs VPS
+
+Para garantir que a mesma base de código rode em ambos os ambientes:
+
+| Recurso      | Hostinger (Shared)     | VPS (Full Control)    | Estratégia Antigravity                              |
+| :----------- | :--------------------- | :-------------------- | :-------------------------------------------------- |
+| **Storage**  | Disco Local (Limitado) | Local / S3 / Block    | Usar `Storage::disk(config('filesystems.default'))` |
+| **Caminhos** | `/home/u123/...`       | `/var/www/html/...`   | Usar `storage_path()` e `base_path()`               |
+| **Drivers**  | `file` / `database`    | `redis` / `memcached` | Definir via `.env` sem alterar o código PHP         |
+| **Symlinks** | Às vezes restrito      | Totalmente livre      | Usar rotas de fallback se `storage:link` falhar     |
+
+## 4. Transição para Stateless
 
 Migrar para arquitetura stateless quando:
 
